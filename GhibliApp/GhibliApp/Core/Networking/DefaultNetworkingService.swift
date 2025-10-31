@@ -30,7 +30,7 @@ struct DefaultNetworkingService: NetworkService {
     }
     
     func fetchFilms() async throws -> [Film] {
-        let url = "https://ghibliapi.vercel.app/filmss"
+        let url = "https://ghibliapi.vercel.app/films"
         return try await fetch(url: url, type: [Film].self)
     }
     

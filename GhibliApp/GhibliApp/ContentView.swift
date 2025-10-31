@@ -8,8 +8,19 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var filmsViewModel = FilmsViewModel()
+    @State private var favoritesViewModel = FavoritesViewModel()
+    
     var body: some View {
-        FilmsScreen()
+        TabView {
+            Tab("Movies", systemImage: "movieclapper") {
+                FilmsScreen(filmsViewModel: filmsViewModel, favoritesViewModel: favoritesViewModel)
+            }
+            
+            Tab("Favorites", systemImage: "heart") {
+                FavoritesScreen(filmsViewModel: filmsViewModel, favoritesViewModel: favoritesViewModel)
+            }
+        }
     }
 }
 

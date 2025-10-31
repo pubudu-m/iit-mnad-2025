@@ -12,10 +12,10 @@ import Observation
 class FilmsViewModel {
     var state: LoadingState<[Film]> = .idle
     
-    private let networkService: NetworkService
+    private let service: NetworkService
     
-    init(networkService: NetworkService = DefaultNetworkingService()) {
-        self.networkService = networkService
+    init(service: NetworkService = DefaultNetworkingService()) {
+        self.service = service
     }
     
     func fetch() async {
@@ -24,7 +24,7 @@ class FilmsViewModel {
         state = .loading
         
         do {
-            let films = try await networkService.fetchFilms()
+            let films = try await service.fetchFilms()
             self.state = .loaded(films)
         } catch let error as APIError {
             self.state = .error(error.errorDescription ?? "unknown error")
