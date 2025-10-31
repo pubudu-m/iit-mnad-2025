@@ -6,3 +6,30 @@
 //
 
 import Foundation
+import Observation
+
+@Observable
+class FilmsViewModel {
+    var state: LoadingState<[Film]> = .idle
+    
+    private let networkService: NetworkService
+    
+    init(networkService: NetworkService = DefaultNetworkingService()) {
+        self.networkService = networkService
+    }
+    
+    func fetch() async {
+        guard !state.isLoading || state.error != nil else { return }
+        
+        state = .loading
+        
+        do {
+            let films = try await networkService.fetchFilms()
+            self.state = .loaded(films)
+        } catch let error as APIError {
+            self.state = .error(error.errorDescription ?? "unknown error")
+        } catch {
+            self.state = .error("unknown error")
+        }
+    }
+}
