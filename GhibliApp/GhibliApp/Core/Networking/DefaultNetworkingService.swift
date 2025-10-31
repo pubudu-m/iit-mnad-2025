@@ -8,8 +8,8 @@
 import Foundation
 
 struct DefaultNetworkingService {
-    func fetch<T: Decodable>(urlString: String, type: T.Type) async throws -> T {
-        guard let url = URL(string: urlString) else {
+    func fetch<T: Decodable>(url: String, type: T.Type) async throws -> T {
+        guard let url = URL(string: url) else {
             throw APIError.invalidURL
         }
         
@@ -27,5 +27,14 @@ struct DefaultNetworkingService {
         } catch let error as URLError {
             throw APIError.networkError(error)
         }
+    }
+    
+    func fetchFilms() async throws -> [Film] {
+        let url = "https://ghibliapi.vercel.app/films"
+        return try await fetch(url: url, type: [Film].self)
+    }
+    
+    func fetchPerson(url: String) async throws -> Person {
+        return try await fetch(url: url, type: Person.self)
     }
 }
