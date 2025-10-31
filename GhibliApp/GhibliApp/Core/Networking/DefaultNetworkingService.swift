@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DefaultNetworkingService {
+struct DefaultNetworkingService: NetworkService {
     func fetch<T: Decodable>(url: String, type: T.Type) async throws -> T {
         guard let url = URL(string: url) else {
             throw APIError.invalidURL
