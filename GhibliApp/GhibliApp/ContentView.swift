@@ -6,8 +6,11 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
+    @Environment(\.modelContext) private var modelContext
+
     @State var filmsViewModel = FilmsViewModel()
     @State private var favoritesViewModel = FavoritesViewModel()
     
@@ -20,6 +23,10 @@ struct ContentView: View {
             Tab("Favorites", systemImage: "heart") {
                 FavoritesScreen(filmsViewModel: filmsViewModel, favoritesViewModel: favoritesViewModel)
             }
+        }
+        .task {
+            favoritesViewModel.configure(modelContext: modelContext)
+            await filmsViewModel.fetch()
         }
     }
 }

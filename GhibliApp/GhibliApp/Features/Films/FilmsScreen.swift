@@ -28,9 +28,6 @@ struct FilmsScreen: View {
                         .foregroundStyle(.pink)
                 }
             }
-            .task {
-                await filmsViewModel.fetch()
-            }
         }
     }
 }
