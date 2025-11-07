@@ -11,6 +11,8 @@ struct FilmDetailScreen: View {
     let film: Film
     let favoritesViewModel: FavoritesViewModel
     
+    @State private var viewModel = FilmDetailViewModel()
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
@@ -40,9 +42,46 @@ struct FilmDetailScreen: View {
                     Text(film.description)
             
                     Divider()
+                    
+                    CharacterSectionView(viewModel: viewModel)
                 }
                 .padding()
             }
+            .task {
+                await viewModel.fetchPerson(film: film)
+            }
+            .toolbar {
+                FavoriteButton(filmID: film.id,
+                               favoritesViewModel: favoritesViewModel)
+            }
+        }
+    }
+}
+
+fileprivate struct CharacterSectionView:  View {
+    let viewModel: FilmDetailViewModel
+    
+    var body: some View {
+        GroupBox {
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Characters")
+                    .font(.headline)
+                
+                switch viewModel.state {
+                case .idle:
+                    EmptyView()
+                case .loading:
+                    ProgressView()
+                case .loaded(let people):
+                    ForEach(people) { person in
+                        Text(person.name)
+                    }
+                case .error(let error):
+                    Text(error)
+                        .foregroundStyle(.red)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 }

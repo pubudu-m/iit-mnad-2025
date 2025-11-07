@@ -19,7 +19,7 @@ class FilmsViewModel {
     }
     
     func fetch() async {
-        guard !state.isLoading || state.error != nil else { return }
+        guard !state.isLoading else { return }
         
         state = .loading
         
