@@ -50,3 +50,9 @@ class FavouritesViewModel {
         favoriteIDs.contains(filmID)
     }
 }
+
+extension FavouritesViewModel {
+    func customfun() {
+        // new imple
+    }
+}

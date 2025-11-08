@@ -20,7 +20,7 @@ struct FilmListView: View {
             
         }
         .navigationDestination(for: Film.self) { film in
-            FilmDetailScreen()
+            FilmDetailScreen(film: film, favoritesViewModel: favoritesViewModel)
         }
     }
 }
