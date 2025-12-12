@@ -8,8 +8,52 @@
 import SwiftUI
 
 struct SimplifiedFilmsView: View {
+    @State private var viewModel = SimplifiedFilmsViewModel()
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationView {
+            content
+                .navigationTitle("Simplified Ghibli Films")
+        }
+        .task {
+            await viewModel.loadFilms()
+        }
+    }
+    
+    @ViewBuilder
+    private var content: some View {
+        switch viewModel.state {
+        case .idle:
+            Text("Idle state. Tap refresh to load films.")
+                .foregroundColor(.gray)
+            
+        case .loading:
+            ProgressView("Loading films...")
+                .progressViewStyle(CircularProgressViewStyle())
+            
+        case .loaded:
+            List(viewModel.films) { film in
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(film.title)
+                        .font(.headline)
+                    Text(film.description)
+                        .font(.subheadline)
+                        .lineLimit(2)
+                        .foregroundColor(.secondary)
+                }
+            }
+            
+        case .error(let message):
+            VStack {
+                Text("❌ Error: \(message)")
+                    .foregroundColor(.red)
+                    .multilineTextAlignment(.center)
+                Button("Retry") {
+                    Task { await viewModel.loadFilms() }
+                }
+                .padding(.top, 8)
+            }
+        }
     }
 }
 
